@@ -10,3 +10,11 @@ before_install:
 
 script:
  - bundle exec rspec
+ 
+deploy:
+ provider: heroku
+ api_key: 9674afb3-c9dc-44b9-9a53-b35b22404027
+ app: secure-everglades-17797
+ run: "rake db:migrate"
+ on:
+  all_branches: true

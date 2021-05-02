@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectsController, type: :controller do
+  login_student
   context "GET #index" do
     it "returns a success response" do
       get :index
@@ -16,4 +17,20 @@ RSpec.describe ProjectsController, type: :controller do
       expect(response).to be_success
     end
   end
+
+  context "Get #new" do
+    it "returns a success response" do
+      get :new
+      expect(response).to be_success
+    end
+  end
+
+  context "GET #edit" do
+    let!(:project) { Project.create(title: "Test title", description: "Test description") }
+    it "returns a success response" do
+      get :edit, params: { id: project }
+      expect(response).to be_success
+    end
+  end
+
 end

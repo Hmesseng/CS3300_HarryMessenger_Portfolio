@@ -5,6 +5,9 @@ ruby '2.7.0'
 
 gem 'mini_racer'
 
+gem 'devise'
+
+gem 'faker'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -53,6 +56,9 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
 
   gem 'capybara', '>= 2.15'
+
+  gem 'factory_bot_rails'
+
 end
 
 group :development do
