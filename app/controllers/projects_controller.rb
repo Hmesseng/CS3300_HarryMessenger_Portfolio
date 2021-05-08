@@ -1,5 +1,5 @@
 class ProjectsController < ApplicationController
-  before_action :authenticate_student!
+ 
   before_action :set_project, only: %i[ show edit update destroy ]
 
   # GET /projects or /projects.json
@@ -13,11 +13,20 @@ class ProjectsController < ApplicationController
 
   # GET /projects/new
   def new
-    @project = Project.new
+    if student_signed_in?
+      @project = Project.new
+    else
+      redirect_to new_student_session_path
+    end
   end
 
   # GET /projects/1/edit
   def edit
+    if student_signed_in?
+    
+    else 
+      redirect_to new_student_session_path
+    end
   end
 
   # POST /projects or /projects.json
@@ -50,10 +59,14 @@ class ProjectsController < ApplicationController
 
   # DELETE /projects/1 or /projects/1.json
   def destroy
-    @project.destroy
-    respond_to do |format|
-      format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
-      format.json { head :no_content }
+    if student_signed_in?
+      @project.destroy
+      respond_to do |format|
+        format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      redirect_to new_student_session_path
     end
   end
 

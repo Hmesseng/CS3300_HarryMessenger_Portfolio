@@ -1,99 +1,91 @@
 require 'rails_helper'
 
 RSpec.feature "Projects", type: :feature do
-  context "Create new project" do
-    before(:each) do
-      visit root_path
-      find(:xpath, '/html/body/a[1]').click
-      within(:xpath, '/html/body/form') do
-        fill_in "student[email]", with: "testemail@uccs.edu"
-        fill_in "student[password]", with: "testpassword"
-        fill_in "student[password_confirmation]", with: "testpassword"
-        find(:xpath, '/html/body/form/div[4]/input').click
-      end
-      find(:xpath, '/html/body/a').click
-      within(:xpath, '/html/body/form') do
-        fill_in "Title", with: "Test title"
-      end
+  #start of should pass scenario
+  scenario "should pass" do
+    visit new_student_session_path
+    find(:xpath, '/html/body/div/a[1]').click #sign up button
+    within(:xpath, '/html') do
+      fill_in "student[email]", with: "testemail@uccs.edu"
+      fill_in "student[password]", with: "password"
+      fill_in "student[password_confirmation]", with: "password"
+      find(:xpath, '/html/body/div/form/div[4]/input').click #register button
+    end
+    visit new_project_path 
+    within("form") do
+      fill_in "Description", with: "Description can't be blank"
+      fill_in "Title", with: "Title can't be blank"
+    end
+    find(:xpath, '/html/body/div/form/div[3]/input').click #create button
+    expect(page).to have_content("Description can't be blank")
+    expect(page).to have_content("Title can't be blank")
+  end #end of should pass scenario
+
+  #start of should pass scenario
+  scenario "Should pass Update project" do
+    visit new_student_session_path
+    find(:xpath, '/html/body/div/a[1]').click #sign up button
+    within(:xpath, '/html') do
+      fill_in "student[email]", with: "testemail@uccs.edu"
+      fill_in "student[password]", with: "password"
+      fill_in "student[password_confirmation]", with: "password"
+      find(:xpath, '/html/body/div/form/div[4]/input').click  #register button
     end
 
-    scenario "should be successful" do
-      fill_in "Description", with: "Test description"
-      find(:xpath, '/html/body/form/div[3]/input').click
-      expect(page).to have_content("Project was successfully created")
+    visit new_project_path 
+
+    within("form") do
+      fill_in "Description", with: "Description can't be blank"
+      fill_in "Title", with: "Title can't be blank"
     end
 
-    scenario "should fail" do
-      find(:xpath, '/html/body/form/div[3]/input').click
-      expect(page).to have_content("Description can't be blank")
-    end
-  end
+    find(:xpath, '/html/body/div/form/div[3]/input').click #create button
 
-  context "Update project" do
-    
-    before(:each) do
-      #register test student
-      visit root_path
-      find(:xpath, '/html/body/a[1]').click #click sign up
-      #fill in form to register student
-      within(:xpath, '/html/body/form') do
-        fill_in "student[email]", with: "testemail@uccs.edu"
-        fill_in "student[password]", with: "testpassword"
-        fill_in "student[password_confirmation]", with: "testpassword"
-        find(:xpath, '/html/body/form/div[4]/input').click #click sign up
-      end
-      find(:xpath, '/html/body/a').click #click new project
-      #fill in project form
-      within(:xpath, '/html/body/form') do
-        fill_in "Title", with: "Test title"
-        fill_in "Description", with: "Test content"
-        find(:xpath, '/html/body/form/div[3]/input').click #click create project
-      end
-      find(:xpath, '/html/body/a[1]').click #click edit project
-    end
+    visit projects_path
+    find(:xpath, '/html/body/div/div/div[2]/table/tbody/tr/td[4]/a').click #edit button
 
-    scenario "should be successful" do
-      within(:xpath, '/html/body/form') do
+    within("form") do
         fill_in "Description", with: "New description content"
-        find(:xpath, '/html/body/form/div[3]/input').click #click update project
+        fill_in "Title", with: "New Title"
       end
-      expect(page).to have_content("Project was successfully updated")
+    find(:xpath, '/html/body/div/form/div[3]/input').click #create button
+    expect(page).to have_content("Project was successfully updated")
+    
+    #Should fail test  
+    visit projects_path
+    find(:xpath, '/html/body/div/div/div[2]/table/tbody/tr/td[4]/a').click #edit button
+
+    
+    within("form") do
+      fill_in "Description", with: ""
+      fill_in "Title", with: ""
     end
 
-    scenario "should fail" do
-      within(:xpath, '/html/body/form') do
-        fill_in "Description", with: ""
-        find(:xpath, '/html/body/form/div[3]/input').click #click update project
-      end
-      expect(page).to have_content("Description can't be blank")
-    end
-  end
+    find(:xpath, '/html/body/div/form/div[3]/input').click #create button
+    expect(page).to have_content("Description can't be blank")
+    expect(page).to have_content("Title can't be blank")
+  end #end of update scenario
 
-  context "Remove existing project" do
-    before(:each) do
-      #register test student
-      visit root_path
-      find(:xpath, '/html/body/a[1]').click #click sign up
-     #fill in form to register student
-     within(:xpath, '/html/body/form') do
-       fill_in "student[email]", with: "testemail@uccs.edu"
-        fill_in "student[password]", with: "testpassword"
-        fill_in "student[password_confirmation]", with: "testpassword"
-       find(:xpath, '/html/body/form/div[4]/input').click #click sign up
-      end
-      find(:xpath, '/html/body/a').click #click new project
-      #fill in project form
-      within(:xpath, '/html/body/form') do
-       fill_in "Title", with: "Test title"
-       fill_in "Description", with: "Test content"
-       find(:xpath, '/html/body/form/div[3]/input').click #click create project
-      end
-      find(:xpath, '/html/body/a[2]').click #click back to get to index page
+  #start of destroy a project test
+  scenario "should pass destroy project" do
+    visit new_student_session_path
+    find(:xpath, '/html/body/div/a[1]').click #sign up button
+    within(:xpath, '/html') do
+      fill_in "student[email]", with: "testemail@uccs.edu"
+      fill_in "student[password]", with: "password"
+      fill_in "student[password_confirmation]", with: "password"
+      find(:xpath, '/html/body/div/form/div[4]/input').click #register button
     end
-    scenario "remove project" do
-      find(:xpath, '/html/body/table/tbody/tr[1]/td[5]/a').click
-      expect(page).to have_content("Project was successfully destroyed")
-      expect(Project.count).to eq(0)
+    visit new_project_path 
+    within("form") do
+      fill_in "Description", with: "Description can't be blank"
+      fill_in "Title", with: "Title can't be blank"
     end
-  end
+    find(:xpath, '/html/body/div/form/div[3]/input').click #create button
+    
+    visit projects_path
+    find(:xpath, '/html/body/div/div/div[2]/table/tbody/tr/td[5]/a').click #destroy button
+    expect(page).to have_content("Project was successfully destroyed")
+    expect(Project.count).to eq(0)
+  end #end of destroy scenario
 end

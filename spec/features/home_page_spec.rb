@@ -3,6 +3,6 @@ require "rails_helper"
 RSpec.feature "Visiting the homepage", type: :feature do
   scenario "The visitor should see login screen" do
     visit root_path
-    expect(page).to have_text("Log in")
+    expect(page).to have_text("Projects")
   end
 end
